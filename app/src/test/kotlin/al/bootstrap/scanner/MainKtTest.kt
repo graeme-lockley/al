@@ -9,10 +9,15 @@ class MainKtTest {
         val tokens = scanInput("")
 
         assertEquals(1, tokens.size)
-        assertEquals("", tokens[0].lexeme)
-        assertEquals(TToken.EOS, tokens[0].tToken)
-        assertEquals(PointLocation(0, 0, 0), tokens[0].location)
-        assertEquals(0, tokens[0].comments.size)
+        assertEquals(
+            Token(
+                "",
+                TToken.EOS,
+                PointLocation(0, 0, 0),
+                emptyList()
+            ),
+            tokens[0]
+        )
     }
 
     @Test
@@ -20,10 +25,49 @@ class MainKtTest {
         val tokens = scanInput("    ")
 
         assertEquals(1, tokens.size)
-        assertEquals("", tokens[0].lexeme)
-        assertEquals(TToken.EOS, tokens[0].tToken)
-        assertEquals(PointLocation(4, 0, 4), tokens[0].location)
-        assertEquals(0, tokens[0].comments.size)
+        assertEquals(
+            Token(
+                "",
+                TToken.EOS,
+                PointLocation(4, 0, 4),
+                emptyList()
+            ),
+            tokens[0]
+        )
+    }
+
+    @Test
+    fun givenASymbol() {
+        val tokens = scanInput("Hello world")
+
+        assertEquals(3, tokens.size)
+        assertEquals(
+            Token(
+                "Hello",
+                TToken.SYMBOL,
+                locationFrom(0, 0, 0, 4, 0, 4),
+                emptyList()
+            ),
+            tokens[0]
+        )
+        assertEquals(
+            Token(
+                "world",
+                TToken.SYMBOL,
+                locationFrom(6, 0, 6, 10, 0, 10),
+                emptyList()
+            ),
+            tokens[1]
+        )
+        assertEquals(
+            Token(
+                "",
+                TToken.EOS,
+                PointLocation(11, 0, 11),
+                emptyList()
+            ),
+            tokens[2]
+        )
     }
 }
 
