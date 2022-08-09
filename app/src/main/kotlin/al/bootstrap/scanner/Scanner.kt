@@ -9,7 +9,10 @@ enum class TToken {
     OPEN_BLOCK,
     SEPARATOR,
     CLOSE_BLOCK,
-    IDENTIFIER
+
+    IDENTIFIER,
+
+    LPAREN_RPAREN
 }
 
 data class Token(var lexeme: String?, var tToken: TToken, var location: Location, var comments: List<Comment>)
@@ -118,6 +121,19 @@ class Scanner(private val input: String) {
                         locationFrom(startOffset, startLine, startColumn, offset, line, column),
                         emptyList()
                     )
+                }
+                '(' -> {
+                    skipCharacter()
+                    if (nextCh == ')') {
+                        skipCharacter()
+
+                        token = Token(
+                            "",
+                            TToken.LPAREN_RPAREN,
+                            locationFrom(startOffset, startLine, startColumn, offset, line, column),
+                            emptyList()
+                        )
+                    }
                 }
             }
         }
