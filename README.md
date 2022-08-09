@@ -24,7 +24,53 @@ A characteristic of Al is that it is indent based - in other words indentation i
 Using these special tokens the grammar can be described using an EBNF grammar.
 
 ```text
-TODO
+Program: Expressions;
+
+Expressions: Expression {SEPARATOR Expression};
+
+Expression
+  : LetExpression
+  | VarExpression
+  | AssignmentExpression
+  | IfExpression
+  | WhileExpression
+  | TryExpression
+  | SignalExpression
+  | ImportExpression
+  | OrExpression
+  ;
+  
+OrExpression: AndExpression {"||" OrExpression};
+
+AndExpression: RelationalExpression {RelationalOp RelationExpression};
+
+RelationalExpression: ConsExpression {AdditiveOp ConsExpression};
+
+RelationOp: "==" | "!=" | "<=" | "<" | ">=" | ">";
+
+ConsExpression: AdditiveExpression {ConsOp AdditiveEpxression};
+
+ConsOp: ":";
+
+AdditiveExpression: MultiplicativeExpression {AdditiveOp MultiplicativeExpression};
+
+AdditiveOp: "+" | "-";
+
+MultiplicativeExpression: Factor {MultiplicativeOp Factor};
+
+RelationOp: "*" | "/";
+
+Factor
+  : "()"
+  | "(" Expressions ")"
+  | "[" [Expression {"," Expression}] "]"
+  | LiteralBool
+  | LiteralChar
+  | LiteralI32
+  | LiteralString
+  | LiteralFloat
+  | Identifier [ "::" Type] {Expression}
+  ;
 ```
 
 Using this grammar and the indentation rules, Al's lexical structure is defined as follows:
