@@ -71,6 +71,21 @@ Factor
   | LiteralFloat
   | Identifier [ "::" Type] {Expression}
   ;
+  
+Type: TupleType {"->" TupleType};
+
+TupleType: BasicType {"*" BasicType};
+
+BasicType
+  : "()"
+  | "Bool"
+  | "Char"
+  | "I32"
+  | "String"
+  | "Float"
+  | Identifier {Type}
+  | "(" Type ")"
+  ;
 ```
 
 Using this grammar and the indentation rules, Al's lexical structure is defined as follows:
