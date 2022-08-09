@@ -89,6 +89,7 @@ class ScannerTest {
             Pair("Hello", TToken.IDENTIFIER),
             Pair("    ", TToken.OPEN_BLOCK),
             Pair("world", TToken.IDENTIFIER),
+            Pair("", TToken.SEPARATOR),
             Pair("moon", TToken.IDENTIFIER),
             Pair("", TToken.CLOSE_BLOCK),
             Pair("fred", TToken.IDENTIFIER),

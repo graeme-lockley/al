@@ -7,6 +7,7 @@ enum class TToken {
     ERROR,
     EOS,
     OPEN_BLOCK,
+    SEPARATOR,
     CLOSE_BLOCK,
     IDENTIFIER
 }
@@ -74,11 +75,16 @@ class Scanner(private val input: String) {
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, TToken.OPEN_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                     return true
-                } else if (blocks.isNotEmpty() && nextColumn < blocks.last().indent) {
-                    blocks.removeLast()
+                } else if (blocks.isNotEmpty()) {
+                    if (nextColumn < blocks.last().indent) {
+                        blocks.removeLast()
 
-                    token = Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
-                    return true
+                        token = Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                        return true
+                    } else if (nextColumn == blocks.last().indent) {
+                        token = Token("", TToken.SEPARATOR, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                        return true
+                    }
                 }
             }
         }
