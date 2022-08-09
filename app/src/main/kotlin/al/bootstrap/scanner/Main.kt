@@ -23,11 +23,15 @@ enum class TToken {
 
 data class Token(var lexeme: String?, var tToken: TToken, var location: Location, var comments: List<Comment>)
 
+data class Block(var indent: Int)
+
 fun scan(input: String): Scanner =
     Scanner(input)
 
 class Scanner(private val input: String) {
     private val inputLength = input.length
+
+    private val blocks = ArrayDeque<Block>()
 
     private var offset = 0
     private var line = 0
@@ -54,12 +58,44 @@ class Scanner(private val input: String) {
         if (token.tToken == TToken.EOS)
             return false
 
-        while (nextOffset < inputLength && input[nextOffset].isWhitespace()) {
-            skipCharacter()
+        run {
+            var indent = false
+            var startOffset = nextOffset
+            var startLine = nextLine
+            var startColumn = nextColumn
+            while (nextOffset < inputLength && nextCh.isWhitespace()) {
+                if (nextColumn == 0) {
+                    indent = true
+                    startOffset = nextOffset
+                    startLine = nextLine
+                    startColumn = 0
+                }
+
+                skipCharacter()
+            }
+
+            if (indent && nextOffset < inputLength) {
+                if (offset > if (blocks.isEmpty()) 0 else blocks.last().indent) {
+                    blocks.addLast(Block(offset))
+                    val lexeme = input.slice(startOffset until nextOffset)
+                    token = Token(lexeme, TToken.OPEN_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    return true
+                } else if (blocks.isNotEmpty() && offset < blocks.last().indent) {
+                    blocks.removeLast()
+
+                    token = Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    return true
+                }
+            }
         }
 
         if (nextOffset == inputLength) {
-            token = Token("", TToken.EOS, PointLocation(nextOffset, nextLine, nextColumn), emptyList())
+            token = if (blocks.isEmpty()) {
+                Token("", TToken.EOS, PointLocation(nextOffset, nextLine, nextColumn), emptyList())
+            } else {
+                blocks.removeLast()
+                Token("", TToken.CLOSE_BLOCK, PointLocation(nextOffset, nextLine, nextColumn), emptyList())
+            }
         } else {
             val startOffset = nextOffset
             val startLine = nextLine
