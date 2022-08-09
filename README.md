@@ -17,3 +17,23 @@ Al has the following features:
 
 Well, for a start, it'll have the above features.  It will also be compiled using LLVM and will have a bootstrapped compiler.  The bootstrap compiler will be written in Java however the intention is that the first real Al program will be a compiler for Al.
 
+## Syntax
+
+A characteristic of Al is that it is indent based - in other words indentation is used to signal the opening and closing of blocks much like `{` and `}` do in C-based languages.  To support this the scanner is responsible for keeping track of spaces and emitting `OPEN_BLOCK` and `CLOSE_BLOCK` tokens whenever the indentation level changes.  There is however a "trick" that needs to be considered - indentation is reset whenever entering a nested structure like `( )`, `[ ]` or `{ }`.  This means that the scanner will need to be aware of these structures and keep note of them.
+
+Using these special tokens the grammar can be described using an EBNF grammar.
+
+```text
+TODO
+```
+
+Using this grammar and the indentation rules, Al's lexical structure is defined as follows:
+
+```text
+tokens
+  Symbol = id {digit | id} {"'"};
+    
+fragments
+  digit = '0'-'9';
+  id = 'a'-'z' + 'A'-'Z' + '_';
+```
