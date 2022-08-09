@@ -3,7 +3,7 @@ package al.bootstrap.scanner
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MainKtTest {
+class ScannerTest {
     @Test
     fun givenEmptyStringWithoutComments() {
         val tokens = scanInput("")
@@ -37,14 +37,14 @@ class MainKtTest {
     }
 
     @Test
-    fun givenASymbol() {
+    fun givenAnIdentifier() {
         val tokens = scanInput("Hello world")
 
         assertEquals(3, tokens.size)
         assertEquals(
             Token(
                 "Hello",
-                TToken.SYMBOL,
+                TToken.IDENTIFIER,
                 locationFrom(0, 0, 0, 4, 0, 4),
                 emptyList()
             ),
@@ -53,7 +53,7 @@ class MainKtTest {
         assertEquals(
             Token(
                 "world",
-                TToken.SYMBOL,
+                TToken.IDENTIFIER,
                 locationFrom(6, 0, 6, 10, 0, 10),
                 emptyList()
             ),
@@ -71,7 +71,7 @@ class MainKtTest {
     }
 
     @Test
-    fun givenAnIndentedSymbol() {
+    fun givenAnIndentedIdentifier() {
         val tokens = scanInput("  Hello\n    world")
 
         assertEquals(7, tokens.size)
@@ -87,7 +87,7 @@ class MainKtTest {
         assertEquals(
             Token(
                 "Hello",
-                TToken.SYMBOL,
+                TToken.IDENTIFIER,
                 locationFrom(2, 0, 2, 6, 0, 6),
                 emptyList()
             ),
@@ -105,7 +105,7 @@ class MainKtTest {
         assertEquals(
             Token(
                 "world",
-                TToken.SYMBOL,
+                TToken.IDENTIFIER,
                 locationFrom(12, 1, 4, 16, 1, 8),
                 emptyList()
             ),
@@ -141,19 +141,19 @@ class MainKtTest {
     }
 
     @Test
-    fun givenAnUnindentedSymbol() {
+    fun givenAnUnindentedIdentifier() {
         val tokens = scanInput("  Hello\n    world\n    moon\n  fred\nsam\n")
 
         assertEquals(listOf(
             Pair("  ", TToken.OPEN_BLOCK),
-            Pair("Hello", TToken.SYMBOL),
+            Pair("Hello", TToken.IDENTIFIER),
             Pair("    ", TToken.OPEN_BLOCK),
-            Pair("world", TToken.SYMBOL),
-            Pair("moon", TToken.SYMBOL),
+            Pair("world", TToken.IDENTIFIER),
+            Pair("moon", TToken.IDENTIFIER),
             Pair("", TToken.CLOSE_BLOCK),
-            Pair("fred", TToken.SYMBOL),
+            Pair("fred", TToken.IDENTIFIER),
             Pair("", TToken.CLOSE_BLOCK),
-            Pair("sam", TToken.SYMBOL),
+            Pair("sam", TToken.IDENTIFIER),
             Pair("", TToken.EOS),
         ), tokens.map { Pair(it.lexeme, it.tToken) })
     }

@@ -31,7 +31,7 @@ Using this grammar and the indentation rules, Al's lexical structure is defined 
 
 ```text
 tokens
-  Symbol = id {digit | id} {"'"};
+  Identifier = id {digit | id} {"'"};
     
 fragments
   digit = '0'-'9';
