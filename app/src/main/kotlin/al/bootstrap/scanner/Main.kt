@@ -63,7 +63,7 @@ class Scanner(private val input: String) {
             var startOffset = nextOffset
             var startLine = nextLine
             var startColumn = nextColumn
-            while (nextOffset < inputLength && nextCh.isWhitespace()) {
+            while (true) {
                 if (nextColumn == 0) {
                     indent = true
                     startOffset = nextOffset
@@ -71,16 +71,20 @@ class Scanner(private val input: String) {
                     startColumn = 0
                 }
 
-                skipCharacter()
+                if (nextOffset < inputLength && nextCh.isWhitespace()) {
+                    skipCharacter()
+                } else {
+                    break
+                }
             }
 
             if (indent && nextOffset < inputLength) {
-                if (offset > if (blocks.isEmpty()) 0 else blocks.last().indent) {
-                    blocks.addLast(Block(offset))
+                if (nextColumn > if (blocks.isEmpty()) 0 else blocks.last().indent) {
+                    blocks.addLast(Block(nextColumn))
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, TToken.OPEN_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                     return true
-                } else if (blocks.isNotEmpty() && offset < blocks.last().indent) {
+                } else if (blocks.isNotEmpty() && nextColumn < blocks.last().indent) {
                     blocks.removeLast()
 
                     token = Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())

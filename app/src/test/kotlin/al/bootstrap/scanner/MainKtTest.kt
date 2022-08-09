@@ -69,6 +69,7 @@ class MainKtTest {
             tokens[2]
         )
     }
+
     @Test
     fun givenAnIndentedSymbol() {
         val tokens = scanInput("  Hello\n    world")
@@ -137,6 +138,24 @@ class MainKtTest {
             ),
             tokens[6]
         )
+    }
+
+    @Test
+    fun givenAnUnindentedSymbol() {
+        val tokens = scanInput("  Hello\n    world\n    moon\n  fred\nsam\n")
+
+        assertEquals(listOf(
+            Pair("  ", TToken.OPEN_BLOCK),
+            Pair("Hello", TToken.SYMBOL),
+            Pair("    ", TToken.OPEN_BLOCK),
+            Pair("world", TToken.SYMBOL),
+            Pair("moon", TToken.SYMBOL),
+            Pair("", TToken.CLOSE_BLOCK),
+            Pair("fred", TToken.SYMBOL),
+            Pair("", TToken.CLOSE_BLOCK),
+            Pair("sam", TToken.SYMBOL),
+            Pair("", TToken.EOS),
+        ), tokens.map { Pair(it.lexeme, it.tToken) })
     }
 }
 
