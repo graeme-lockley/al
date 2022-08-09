@@ -20,6 +20,19 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    vASM = '9.2'
+    vKotest = '4.6.1'
+    vKotlin = '1.5.21'
+    vLLVMPlatform = '12.0.1-1.5.6'
+    vPicoCLI = '4.6.1'
+    vSnakeYAML = '1.29'
+}
+
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     // Align versions of all Kotlin components
     implementation platform('org.jetbrains.kotlin:kotlin-bom')
@@ -29,16 +42,10 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.0.1-jre'
-}
+    implementation "org.yaml:snakeyaml:$vSnakeYAML"
 
-testing {
-    suites {
-        // Configure the built-in test suite
-        test {
-            // Use Kotlin Test test framework
-            useKotlinTest()
-        }
-    }
+    testImplementation "io.kotest:kotest-runner-junit5-jvm:$vKotest"
+    testImplementation "io.kotest:kotest-assertions-core-jvm:$vKotest"
 }
 
 application {

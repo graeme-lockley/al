@@ -1,90 +1,59 @@
 package al.bootstrap.scanner
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-class ScannerTest {
-    @Test
-    fun givenEmptyStringWithoutComments() {
+class ScannerTest : FunSpec({
+    test("empty string without comments") {
         val tokens = scanInput("")
 
-        assertEquals(1, tokens.size)
-        assertEquals(
-            mkToken("", TToken.EOS, PointLocation(0, 0, 0)),
-            tokens[0]
-        )
+        1 shouldBe tokens.size
+        tokens[0] shouldBe mkToken("", TToken.EOS, PointLocation(0, 0, 0))
     }
 
-    @Test
-    fun givenEmptyStringWithWhitespace() {
+    test("empty string with whitespace") {
         val tokens = scanInput("    ")
 
-        assertEquals(1, tokens.size)
-        assertEquals(
-            mkToken("", TToken.EOS, PointLocation(4, 0, 4)),
-            tokens[0]
-        )
+        1 shouldBe tokens.size
+        mkToken("", TToken.EOS, PointLocation(4, 0, 4)) shouldBe tokens[0]
     }
 
-    @Test
-    fun givenAnIdentifier() {
+    test("give an Identifier") {
         val tokens = scanInput("Hello world")
 
-        assertEquals(3, tokens.size)
-        assertEquals(
-            mkToken("Hello", TToken.IDENTIFIER, locationFrom(0, 0, 0, 4, 0, 4)),
-            tokens[0]
-        )
-        assertEquals(
-            mkToken("world", TToken.IDENTIFIER, locationFrom(6, 0, 6, 10, 0, 10)),
-            tokens[1]
-        )
-        assertEquals(
-            mkToken("", TToken.EOS, PointLocation(11, 0, 11)),
-            tokens[2]
-        )
+        3 shouldBe tokens.size
+
+        mkToken("Hello", TToken.IDENTIFIER, locationFrom(0, 0, 0, 4, 0, 4)) shouldBe tokens[0]
+
+        mkToken("world", TToken.IDENTIFIER, locationFrom(6, 0, 6, 10, 0, 10)) shouldBe tokens[1]
+
+        mkToken("", TToken.EOS, PointLocation(11, 0, 11)) shouldBe tokens[2]
     }
 
-    @Test
-    fun givenAnIndentedIdentifier() {
+    test("given an indented identifier") {
         val tokens = scanInput("  Hello\n    world")
 
-        assertEquals(7, tokens.size)
-        assertEquals(
-            mkToken("  ", TToken.OPEN_BLOCK, locationFrom(0, 0, 0, 1, 0, 1)),
-            tokens[0]
-        )
-        assertEquals(
-            mkToken("Hello", TToken.IDENTIFIER, locationFrom(2, 0, 2, 6, 0, 6)),
-            tokens[1]
-        )
-        assertEquals(
-            mkToken("    ", TToken.OPEN_BLOCK, locationFrom(8, 1, 0, 11, 1, 3)),
-            tokens[2]
-        )
-        assertEquals(
-            mkToken("world", TToken.IDENTIFIER, locationFrom(12, 1, 4, 16, 1, 8)),
-            tokens[3]
-        )
-        assertEquals(
-            mkToken("", TToken.CLOSE_BLOCK, PointLocation(17, 1, 9)),
-            tokens[4]
-        )
-        assertEquals(
-            mkToken("", TToken.CLOSE_BLOCK, PointLocation(17, 1, 9)),
-            tokens[5]
-        )
-        assertEquals(
-            mkToken("", TToken.EOS, PointLocation(17, 1, 9)),
-            tokens[6]
-        )
+        7 shouldBe tokens.size
+
+        mkToken("  ", TToken.OPEN_BLOCK, locationFrom(0, 0, 0, 1, 0, 1)) shouldBe tokens[0]
+
+        mkToken("Hello", TToken.IDENTIFIER, locationFrom(2, 0, 2, 6, 0, 6)) shouldBe tokens[1]
+
+        mkToken("    ", TToken.OPEN_BLOCK, locationFrom(8, 1, 0, 11, 1, 3)) shouldBe tokens[2]
+
+        mkToken("world", TToken.IDENTIFIER, locationFrom(12, 1, 4, 16, 1, 8)) shouldBe tokens[3]
+
+        mkToken("", TToken.CLOSE_BLOCK, PointLocation(17, 1, 9)) shouldBe tokens[4]
+
+        mkToken("", TToken.CLOSE_BLOCK, PointLocation(17, 1, 9)) shouldBe tokens[5]
+
+        mkToken("", TToken.EOS, PointLocation(17, 1, 9)) shouldBe tokens[6]
     }
 
-    @Test
-    fun givenAnUnindentedIdentifier() {
+    test("given an unindented identifier") {
         val tokens = scanInput("  Hello\n    world\n    moon\n  fred\nsam\n")
 
-        assertEquals(listOf(
+        listOf(
             Pair("  ", TToken.OPEN_BLOCK),
             Pair("Hello", TToken.IDENTIFIER),
             Pair("    ", TToken.OPEN_BLOCK),
@@ -96,9 +65,9 @@ class ScannerTest {
             Pair("", TToken.CLOSE_BLOCK),
             Pair("sam", TToken.IDENTIFIER),
             Pair("", TToken.EOS),
-        ), tokens.map { Pair(it.lexeme, it.tToken) })
+        ) shouldBe tokens.map { Pair(it.lexeme, it.tToken) }
     }
-}
+})
 
 private fun scanInput(input: String): List<Token> {
     val scanner = scan(input)
