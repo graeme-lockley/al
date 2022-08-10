@@ -4,11 +4,7 @@ package al.bootstrap.scanner
 data class Comment(var lexeme: String, var location: Location)
 
 enum class TToken {
-    ERROR,
-    EOS,
-    OPEN_BLOCK,
-    SEPARATOR,
-    CLOSE_BLOCK,
+    ERROR, EOS, OPEN_BLOCK, SEPARATOR, CLOSE_BLOCK,
 
     IDENTIFIER,
 
@@ -19,8 +15,7 @@ data class Token(var lexeme: String?, var tToken: TToken, var location: Location
 
 data class Block(var indent: Int)
 
-fun scan(input: String): Scanner =
-    Scanner(input)
+fun scan(input: String): Scanner = Scanner(input)
 
 class Scanner(private val input: String) {
     private val inputLength = input.length
@@ -49,10 +44,9 @@ class Scanner(private val input: String) {
         }
 
     fun skip(): Boolean {
-        if (token.tToken == TToken.EOS)
-            return false
+        if (token.tToken == TToken.EOS) return false
 
-        run {
+        if (nextColumn != 0 || nextCh.isWhitespace()) {
             var indent = false
             var startOffset = nextOffset
             var startLine = nextLine
@@ -73,22 +67,20 @@ class Scanner(private val input: String) {
             }
 
             if (indent && nextOffset < inputLength) {
-                if (nextColumn > if (blocks.isEmpty()) 0 else blocks.last().indent) {
+                val lastIndent = if (blocks.isEmpty()) 0 else blocks.last().indent
+                token = if (nextColumn > lastIndent) {
                     blocks.addLast(Block(nextColumn))
                     val lexeme = input.slice(startOffset until nextOffset)
-                    token = Token(lexeme, TToken.OPEN_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
-                    return true
-                } else if (blocks.isNotEmpty()) {
-                    if (nextColumn < blocks.last().indent) {
-                        blocks.removeLast()
+                    Token(lexeme, TToken.OPEN_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                } else if (nextColumn < lastIndent) {
+                    blocks.removeLast()
 
-                        token = Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
-                        return true
-                    } else if (nextColumn == blocks.last().indent) {
-                        token = Token("", TToken.SEPARATOR, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
-                        return true
-                    }
+                    Token("", TToken.CLOSE_BLOCK, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                } else {
+                    Token("", TToken.SEPARATOR, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
+
+                return true
             }
         }
 
@@ -116,10 +108,7 @@ class Scanner(private val input: String) {
                     val lexeme = input.slice(startOffset until nextOffset)
 
                     token = Token(
-                        lexeme,
-                        TToken.IDENTIFIER,
-                        locationFrom(startOffset, startLine, startColumn, offset, line, column),
-                        emptyList()
+                        lexeme, TToken.IDENTIFIER, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList()
                     )
                 }
                 '(' -> {
@@ -128,10 +117,7 @@ class Scanner(private val input: String) {
                         skipCharacter()
 
                         token = Token(
-                            "",
-                            TToken.LPAREN_RPAREN,
-                            locationFrom(startOffset, startLine, startColumn, offset, line, column),
-                            emptyList()
+                            "", TToken.LPAREN_RPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList()
                         )
                     }
                 }

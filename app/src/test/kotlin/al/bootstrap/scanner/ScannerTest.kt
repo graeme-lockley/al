@@ -67,6 +67,17 @@ class ScannerTest : FunSpec({
             Pair("", TToken.EOS),
         )
     }
+
+    test("given two successive unit value on separate lines") {
+        val tokens = scanInput("()\n()\n")
+
+        tokens.map { Pair(it.lexeme, it.tToken) } shouldBe listOf(
+            Pair("", TToken.LPAREN_RPAREN),
+            Pair("", TToken.SEPARATOR),
+            Pair("", TToken.LPAREN_RPAREN),
+            Pair("", TToken.EOS),
+        )
+    }
 })
 
 private fun scanInput(input: String): List<Token> {
