@@ -1,6 +1,9 @@
 package al.bootstrap.parser
 
-import al.bootstrap.parser.ast.Expression
+import al.bootstrap.Errors
+import al.bootstrap.data.Either
+import al.bootstrap.data.Right
+import al.bootstrap.parser.ast.Program
 import al.bootstrap.scanner.Scanner
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.core.spec.style.scopes.FunSpecContainerContext
@@ -22,7 +25,7 @@ class ParserTests : FunSpec({
     }
 })
 
-fun parse(input: String): Expression =
+fun parse(input: String): Either<Errors, Program> =
     parse(Scanner(input))
 
 suspend fun parserConformanceTest(ctx: FunSpecContainerContext, scenarios: List<*>) {
@@ -37,9 +40,10 @@ suspend fun parserConformanceTest(ctx: FunSpecContainerContext, scenarios: List<
 
             ctx.test(name) {
                 val lhs =
-                    parse(input).yaml().toString()
+                    parse(input).map { it.yaml() }.toString()
 
-                val rhs = (output as Any).toString()
+                val rhs =
+                    Right<Errors, Any>(output as Any).toString()
 
                 lhs shouldBe rhs
             }
