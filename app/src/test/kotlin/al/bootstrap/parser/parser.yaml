@@ -1,5 +1,8 @@
-- name: ()
-  input: |
-    ()
-  output:
-    - LiteralUnit
+- scenario:
+    name: Factor
+    tests:
+      - name: ()
+        input: |
+          ()
+        output:
+          - LiteralUnit
