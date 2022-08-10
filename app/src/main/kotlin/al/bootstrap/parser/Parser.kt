@@ -36,11 +36,18 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor>(
     private fun factor(): T_Factor {
         when (scanner.current.tToken) {
             TToken.LPAREN_RPAREN -> {
-                val t1 = nextToken()
-                return visitor.visitFactor1(t1)
+                val a1 = nextToken()
+                return visitor.visitFactor1(a1)
+            }
+            TToken.LPAREN -> {
+                val a1 = nextToken()
+                val a2 = expressions()
+                val a3 = matchToken(TToken.RPAREN)
+
+                return visitor.visitFactor2(a1, a2, a3)
             }
             else -> {
-                throw ParsingException(scanner.current, setOf(TToken.LPAREN_RPAREN))
+                throw ParsingException(scanner.current, setOf(TToken.LPAREN, TToken.LPAREN_RPAREN))
             }
         }
     }

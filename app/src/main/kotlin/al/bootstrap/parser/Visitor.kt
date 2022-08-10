@@ -11,4 +11,5 @@ interface Visitor<T_Program, T_Expressions, T_Expression, T_Factor> {
     fun visitExpression10(a: T_Factor): T_Expression
 
     fun visitFactor1(a: Token): T_Factor
+    fun visitFactor2(a1: Token, a2: T_Expressions, a3: Token): T_Factor
 }

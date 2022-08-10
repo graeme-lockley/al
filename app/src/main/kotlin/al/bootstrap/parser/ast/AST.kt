@@ -16,3 +16,8 @@ data class Unit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"
 }
+
+data class Parenthesis(val expressions: List<Expression>, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("Parenthesis", expressions.map { it.yaml() })
+}

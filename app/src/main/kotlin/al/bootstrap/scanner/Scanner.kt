@@ -8,7 +8,9 @@ enum class TToken {
 
     IDENTIFIER,
 
-    LPAREN_RPAREN
+    LPAREN,
+    LPAREN_RPAREN,
+    RPAREN
 }
 
 data class Token(var lexeme: String?, var tToken: TToken, var location: Location, var comments: List<Comment>)
@@ -113,13 +115,17 @@ class Scanner(private val input: String) {
                 }
                 '(' -> {
                     skipCharacter()
-                    if (nextCh == ')') {
+                    token = if (nextCh == ')') {
                         skipCharacter()
 
-                        token = Token(
-                            "", TToken.LPAREN_RPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList()
-                        )
+                        Token("", TToken.LPAREN_RPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    } else {
+                        Token("", TToken.LPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                     }
+                }
+                ')' -> {
+                    skipCharacter()
+                    token = Token("", TToken.RPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
             }
         }
