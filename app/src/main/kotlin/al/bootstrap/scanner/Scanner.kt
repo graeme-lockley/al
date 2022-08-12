@@ -8,6 +8,9 @@ enum class TToken {
 
     IDENTIFIER,
 
+    FALSE,
+    TRUE,
+
     COMMA,
     LBRACKET,
     LPAREN,
@@ -21,6 +24,11 @@ data class Token(var lexeme: String?, var tToken: TToken, var location: Location
 data class Block(var indent: Int)
 
 fun scan(input: String): Scanner = Scanner(input)
+
+val keywords = hashMapOf(
+    Pair("False", TToken.FALSE),
+    Pair("True", TToken.TRUE),
+)
 
 class Scanner(private val input: String) {
     private val inputLength = input.length
@@ -111,10 +119,13 @@ class Scanner(private val input: String) {
                         skipCharacter()
                     }
                     val lexeme = input.slice(startOffset until nextOffset)
+                    val proposedTToken = keywords[lexeme]
 
-                    token = Token(
-                        lexeme, TToken.IDENTIFIER, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList()
-                    )
+                    token = if (proposedTToken == null) {
+                        Token(lexeme, TToken.IDENTIFIER, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    } else {
+                        Token("", proposedTToken, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    }
                 }
                 '(' -> {
                     skipCharacter()

@@ -12,6 +12,11 @@ data class Program(
 
 sealed class Expression(open val location: Location) : Yamlable
 
+data class LiteralBool(val value: Boolean, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralBool", value)
+}
+
 data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"

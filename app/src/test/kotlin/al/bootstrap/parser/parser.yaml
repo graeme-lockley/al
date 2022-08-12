@@ -24,3 +24,13 @@
           - LiteralList:
               - LiteralUnit
               - LiteralUnit
+      - name: "True"
+        input: |
+          True
+        output:
+          - LiteralBool: true
+      - name: "False"
+        input: |
+          False
+        output:
+          - LiteralBool: false

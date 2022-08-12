@@ -19,7 +19,7 @@ fun parse(scanner: Scanner): Either<Errors, Program> =
         Left(ParseError(e.found, e.expected))
     }
 
-class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression> {
+class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, Expression> {
     override fun visitProgram(a: List<Expression>): Program =
         Program(a)
 
@@ -38,4 +38,13 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression> 
             LiteralList(emptyList(), a1.location + a3.location)
         else
             LiteralList(listOf(a2.a) + a2.b.map { it.b }, a1.location + a3.location)
+
+    override fun visitFactor4(a: Expression): Expression =
+        a
+
+    override fun visitLiteralBool1(a: Token): Expression =
+        LiteralBool(true, a.location)
+
+    override fun visitLiteralBool2(a: Token): Expression =
+        LiteralBool(false, a.location)
 }
