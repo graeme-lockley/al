@@ -12,9 +12,14 @@ data class Program(
 
 sealed class Expression(open val location: Location) : Yamlable
 
-data class Unit(override val location: Location) : Expression(location) {
+data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"
+}
+
+data class LiteralList(val elements: List<Expression>, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralList", elements.map { it.yaml() })
 }
 
 data class Parenthesis(val expressions: List<Expression>, override val location: Location) : Expression(location) {

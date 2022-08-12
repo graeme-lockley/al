@@ -12,3 +12,15 @@
         output:
           - Parenthesis:
             - LiteralUnit
+      - name: "[]"
+        input: |
+          []
+        output:
+          - LiteralList: []
+      - name: "[(), ()]"
+        input: |
+          [(), ()]
+        output:
+          - LiteralList:
+              - LiteralUnit
+              - LiteralUnit

@@ -8,8 +8,11 @@ enum class TToken {
 
     IDENTIFIER,
 
+    COMMA,
+    LBRACKET,
     LPAREN,
     LPAREN_RPAREN,
+    RBRACKET,
     RPAREN
 }
 
@@ -122,6 +125,18 @@ class Scanner(private val input: String) {
                     } else {
                         Token("", TToken.LPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                     }
+                }
+                '[' -> {
+                    skipCharacter()
+                    token = Token("", TToken.LBRACKET, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                ']' -> {
+                    skipCharacter()
+                    token = Token("", TToken.RBRACKET, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                ',' -> {
+                    skipCharacter()
+                    token = Token("", TToken.COMMA, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
                 ')' -> {
                     skipCharacter()

@@ -46,6 +46,27 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor>(
 
                 return visitor.visitFactor2(a1, a2, a3)
             }
+            TToken.LBRACKET -> {
+                val a1 = nextToken()
+                val a2 = if (isToken(TToken.RBRACKET)) {
+                    null
+                } else {
+                    val a21 = expression()
+                    val a22 = mutableListOf<Tuple2<Token, T_Expression>>()
+
+                    while (isToken(TToken.COMMA)) {
+                        val a221 = nextToken()
+                        val a222 = expression()
+
+                        a22.add(Tuple2(a221, a222))
+                    }
+
+                    Tuple2(a21, a22 as List<Tuple2<Token, T_Expression>>)
+                }
+                val a3 = matchToken(TToken.RBRACKET)
+
+                return visitor.visitFactor3(a1, a2, a3)
+            }
             else -> {
                 throw ParsingException(scanner.current, setOf(TToken.LPAREN, TToken.LPAREN_RPAREN))
             }

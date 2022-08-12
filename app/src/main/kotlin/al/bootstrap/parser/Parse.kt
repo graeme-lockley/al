@@ -6,10 +6,7 @@ import al.bootstrap.data.Either
 import al.bootstrap.data.Left
 import al.bootstrap.data.Right
 import al.bootstrap.data.Tuple2
-import al.bootstrap.parser.ast.Expression
-import al.bootstrap.parser.ast.Parenthesis
-import al.bootstrap.parser.ast.Program
-import al.bootstrap.parser.ast.Unit
+import al.bootstrap.parser.ast.*
 import al.bootstrap.scanner.Scanner
 import al.bootstrap.scanner.Token
 
@@ -31,7 +28,14 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression> 
 
     override fun visitExpression10(a: Expression): Expression = a
 
-    override fun visitFactor1(a: Token): Expression = Unit(a.location)
+    override fun visitFactor1(a: Token): Expression = LiteralUnit(a.location)
+
     override fun visitFactor2(a1: Token, a2: List<Expression>, a3: Token): Expression =
         Parenthesis(a2, a1.location + a3.location)
+
+    override fun visitFactor3(a1: Token, a2: Tuple2<Expression, List<Tuple2<Token, Expression>>>?, a3: Token): Expression =
+        if (a2 == null)
+            LiteralList(emptyList(), a1.location + a3.location)
+        else
+            LiteralList(listOf(a2.a) + a2.b.map { it.b }, a1.location + a3.location)
 }
