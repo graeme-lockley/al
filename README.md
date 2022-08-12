@@ -72,6 +72,8 @@ Factor
   | Identifier [ "::" Type] {Expression}
   ;
   
+LiteralBool: "True" | "False";
+  
 Type: TupleType {"->" TupleType};
 
 TupleType: BasicType {"*" BasicType};
