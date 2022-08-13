@@ -27,6 +27,11 @@ data class LiteralI32(val value: String, override val location: Location) : Expr
         singletonMap("LiteralI32", value)
 }
 
+data class LiteralString(val value: String, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralString", value)
+}
+
 data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"

@@ -98,7 +98,8 @@ tokens
   Identifier = id {digit | id} {"'"};
   LiteralChar = chr(39) (!(chr(39) + chr(92)) | (chr(92) (chr(92) + chr(39) + 'n') chr(39); 
   LiteralI32 = digit {digit};
-    
+  LiteralString = '"' {!(chr(34) + chr(92)) | (chr(92) (chr(92) + chr(34) + 'n'} '"'; 
+
 fragments
   digit = '0'-'9';
   id = 'a'-'z' + 'A'-'Z' + '_';

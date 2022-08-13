@@ -48,3 +48,14 @@
           - LiteralI32: 0
           - LiteralI32: 100
           - LiteralI32: 12345
+      - name: Literal String
+        input: |
+          ""
+          "Hello World"
+          "\"\n\\"
+        output:
+          - LiteralString: ""
+          - LiteralString: Hello World
+          - LiteralString: |
+              "
+              \

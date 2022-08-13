@@ -82,6 +82,11 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
 
                 return visitor.visitFactor7(a)
             }
+            isToken(TToken.LITERAL_STRING) -> {
+                val a = nextToken()
+
+                return visitor.visitFactor8(a)
+            }
             else -> {
                 throw ParsingException(scanner.current, setOf(TToken.LPAREN, TToken.LPAREN_RPAREN))
             }

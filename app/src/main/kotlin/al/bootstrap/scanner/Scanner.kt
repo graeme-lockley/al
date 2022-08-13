@@ -9,6 +9,7 @@ enum class TToken {
     IDENTIFIER,
     LITERAL_CHAR,
     LITERAL_INT,
+    LITERAL_STRING,
 
     FALSE,
     TRUE,
@@ -189,6 +190,34 @@ class Scanner(private val input: String) {
                     }
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, TToken.LITERAL_INT, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                '"' -> {
+                    val sb = java.lang.StringBuilder()
+
+                    skipCharacter()
+                    var tToken = TToken.LITERAL_STRING
+                    while (nextCh != '"') {
+                        if (nextCh == '\\') {
+                            skipCharacter()
+                            if (nextCh == '\\' || nextCh == '"') {
+                                sb.append(nextCh)
+                                skipCharacter()
+                            } else if (nextCh == 'n') {
+                                sb.append('\n')
+                                skipCharacter()
+                            } else {
+                                tToken = TToken.ERROR
+                                break
+                            }
+                        } else {
+                            sb.append(nextCh)
+                            skipCharacter()
+                        }
+                    }
+                    skipCharacter()
+
+                    val lexeme = if (tToken == TToken.LITERAL_STRING) sb.toString() else input.slice(startOffset until nextOffset)
+                    token = Token(lexeme, tToken, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
                 else -> {
                     val lexeme = input.slice(startOffset until nextOffset)

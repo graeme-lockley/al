@@ -65,6 +65,9 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
     override fun visitFactor7(a: Token): Expression =
         LiteralI32(a.lexeme, a.location)
 
+    override fun visitFactor8(a: Token): Expression =
+        LiteralString(a.lexeme, a.location)
+
     override fun visitLiteralBool1(a: Token): Expression =
         LiteralBool(true, a.location)
 

@@ -89,6 +89,19 @@ class ScannerTest : FunSpec({
             Pair("", TToken.EOS),
         )
     }
+
+    test("given literal strings") {
+        val tokens = scanInput("\"\" \"Hello world\" \"\\\\\" \"\\\"\" \"\\n\"")
+
+        tokens.map { Pair(it.lexeme, it.tToken) } shouldBe listOf(
+            Pair("", TToken.LITERAL_STRING),
+            Pair("Hello world", TToken.LITERAL_STRING),
+            Pair("\\", TToken.LITERAL_STRING),
+            Pair("\"", TToken.LITERAL_STRING),
+            Pair("\n", TToken.LITERAL_STRING),
+            Pair("", TToken.EOS),
+        )
+    }
 })
 
 private fun scanInput(input: String): List<Token> {
