@@ -69,7 +69,6 @@ Factor
   | LiteralChar
   | LiteralI32
   | LiteralString
-  | LiteralFloat
   | Identifier [ "::" Type] {Expression}
   ;
   
@@ -85,7 +84,6 @@ BasicType
   | "Char"
   | "I32"
   | "String"
-  | "Float"
   | Identifier {Type}
   | "(" Type ")"
   ;
