@@ -1,6 +1,7 @@
 package al.bootstrap.parser
 
 import al.bootstrap.Errors
+import al.bootstrap.InternalError
 import al.bootstrap.ParseError
 import al.bootstrap.data.Either
 import al.bootstrap.data.Left
@@ -15,7 +16,14 @@ fun parse(scanner: Scanner): Either<Errors, Program> =
         Right(Parser(scanner, ParseVisitor()).program())
     } catch (e: ParsingException) {
         Left(ParseError(e.found, e.expected))
+    } catch (e: InternalException) {
+        Left(InternalError(e.token, e.reason))
     }
+
+class InternalException(
+    val token: Token,
+    val reason: String
+) : Exception()
 
 class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, Expression> {
     override fun visitProgram(a: List<Expression>): Program =
@@ -27,7 +35,6 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
     override fun visitExpression10(a: Expression): Expression = a
 
     override fun visitFactor1(a: Token): Expression = LiteralUnit(a.location)
-
     override fun visitFactor2(a1: Token, a2: List<Expression>, a3: Token): Expression =
         Parenthesis(a2, a1.location + a3.location)
 
@@ -39,6 +46,21 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
 
     override fun visitFactor5(a: Expression): Expression =
         a
+
+    override fun visitFactor6(a: Token): Expression =
+        when (a.lexeme.length) {
+            3 -> LiteralChar(a.lexeme[1].code.toChar(), a.location)
+            4 -> {
+                val code =
+                    when (val ch = a.lexeme[2]) {
+                        'n' -> 10
+                        else -> ch.code
+                    }
+
+                LiteralChar(code.toChar(), a.location)
+            }
+            else -> throw InternalException(a, "Literal char lexeme should be of length 3 or 4 characters")
+        }
 
     override fun visitLiteralBool1(a: Token): Expression =
         LiteralBool(true, a.location)

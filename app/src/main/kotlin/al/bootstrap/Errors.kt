@@ -18,3 +18,16 @@ data class ParseError(
             )
         )
 }
+
+data class InternalError(
+    val token: Token,
+    val reason: String
+) : Errors {
+    override fun yaml(): Any =
+        singletonMap(
+            "ParseError", mapOf(
+                Pair("token", token),
+                Pair("reason", reason)
+            )
+        )
+}

@@ -16,7 +16,7 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
         return visitor.visitProgram(a1)
     }
 
-    fun expressions(): T_Expressions {
+    private fun expressions(): T_Expressions {
         val a1 = expression()
         val a2 = mutableListOf<Tuple2<Token, T_Expression>>()
         while (isToken(TToken.SEPARATOR)) {
@@ -71,6 +71,11 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
                 val a = literalBool()
 
                 return visitor.visitFactor5(a)
+            }
+            isToken(TToken.LITERAL_CHAR) -> {
+                val a = nextToken()
+
+                return visitor.visitFactor6(a)
             }
             else -> {
                 throw ParsingException(scanner.current, setOf(TToken.LPAREN, TToken.LPAREN_RPAREN))

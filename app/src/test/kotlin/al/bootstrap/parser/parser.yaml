@@ -12,25 +12,28 @@
         output:
           - Parenthesis:
             - LiteralUnit
-      - name: "[]"
+      - name: Literal List
         input: |
           []
-        output:
-          - LiteralList: []
-      - name: "[(), ()]"
-        input: |
           [(), ()]
         output:
+          - LiteralList: []
           - LiteralList:
               - LiteralUnit
               - LiteralUnit
-      - name: "True"
+      - name: Literal Bool
         input: |
           True
-        output:
-          - LiteralBool: true
-      - name: "False"
-        input: |
           False
         output:
+          - LiteralBool: true
           - LiteralBool: false
+      - name: Literal Char
+        input: |
+          'a'
+          '\''
+          '\n'
+        output:
+          - LiteralChar: 97
+          - LiteralChar: 39
+          - LiteralChar: 10

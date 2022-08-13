@@ -20,7 +20,7 @@ enum class TToken {
     RPAREN
 }
 
-data class Token(var lexeme: String?, var tToken: TToken, var location: Location, var comments: List<Comment>)
+data class Token(var lexeme: String, var tToken: TToken, var location: Location, var comments: List<Comment>)
 
 data class Block(var indent: Int)
 

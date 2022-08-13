@@ -17,6 +17,11 @@ data class LiteralBool(val value: Boolean, override val location: Location) : Ex
         singletonMap("LiteralBool", value)
 }
 
+data class LiteralChar(val value: Char, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralChar", value.code)
+}
+
 data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"
