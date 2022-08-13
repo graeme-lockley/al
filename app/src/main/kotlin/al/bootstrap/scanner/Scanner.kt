@@ -8,6 +8,7 @@ enum class TToken {
 
     IDENTIFIER,
     LITERAL_CHAR,
+    LITERAL_INT,
 
     FALSE,
     TRUE,
@@ -180,6 +181,10 @@ class Scanner(private val input: String) {
 
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, tToken, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                else -> {
+                    val lexeme = input.slice(startOffset until nextOffset)
+                    token = Token(lexeme, TToken.ERROR, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
             }
         }
