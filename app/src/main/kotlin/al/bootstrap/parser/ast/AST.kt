@@ -13,6 +13,16 @@ data class Program(
 
 sealed class Expression(open val location: Location) : Yamlable
 
+data class Identifier(val id: String, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("Identifier", id)
+}
+
+data class Invocation(val expressions: List<Expression>, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("Invocation", expressions.map { it.yaml() })
+}
+
 data class LiteralBool(val value: Boolean, override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         singletonMap("LiteralBool", value)
@@ -51,11 +61,6 @@ data class LiteralRecordKey(val key: String, val location: Location) : Yamlable 
 data class LiteralString(val value: String, override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         singletonMap("LiteralString", value)
-}
-
-data class Identifier(val id: String, override val location: Location) : Expression(location) {
-    override fun yaml(): Any =
-        singletonMap("Identifier", id)
 }
 
 data class LiteralUnit(override val location: Location) : Expression(location) {

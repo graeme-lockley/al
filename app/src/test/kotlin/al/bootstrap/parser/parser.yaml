@@ -1,3 +1,18 @@
+- name: Invocation Expression
+  input: |
+    a
+    a 10
+    a 10 20 30
+  output:
+    - Identifier: a
+    - Invocation:
+        - Identifier: a
+        - LiteralI32: 10
+    - Invocation:
+        - Identifier: a
+        - LiteralI32: 10
+        - LiteralI32: 20
+        - LiteralI32: 30
 - scenario:
     name: Factor
     tests:

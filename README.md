@@ -60,7 +60,7 @@ MultiplicativeExpression: InvocationExpression {MultiplicativeOp InvocationExpre
 
 RelationOp: "*" | "/";
 
-InvocationExpression: Factor {Expression};
+InvocationExpression: Factor {Factor};
 
 Factor
   : "()"

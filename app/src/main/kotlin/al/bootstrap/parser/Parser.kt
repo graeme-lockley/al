@@ -6,9 +6,9 @@ import al.bootstrap.scanner.Scanner
 import al.bootstrap.scanner.TToken
 import al.bootstrap.scanner.Token
 
-class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
+class Parser<T_Program, T_Expressions, T_Expression, T_Invocation_Expression, T_Factor, T_LiteralBool>(
     private val scanner: Scanner,
-    private val visitor: Visitor<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>
+    private val visitor: Visitor<T_Program, T_Expressions, T_Expression, T_Invocation_Expression, T_Factor, T_LiteralBool>
 ) {
     fun program(): T_Program {
         val a1 = expressions()
@@ -31,7 +31,18 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
     }
 
     private fun expression(): T_Expression {
-        return visitor.visitExpression10(factor())
+        return visitor.visitExpression10(invocationExpression())
+    }
+
+    private fun invocationExpression(): T_Invocation_Expression {
+        val a1 = factor()
+
+        val a2 = mutableListOf<T_Factor>()
+        while (isInTokenSet(firstOfFactor)) {
+            a2.add(factor())
+        }
+
+        return visitor.visitInvocationExpression(a1, a2)
     }
 
     private fun factor(): T_Factor {
@@ -163,6 +174,16 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
 }
 
 val firstOfLiteralBool = setOf(TToken.FALSE, TToken.TRUE)
+val firstOfFactor = firstOfLiteralBool + setOf(
+    TToken.LPAREN_RPAREN,
+    TToken.LPAREN,
+    TToken.LCURLY,
+    TToken.LBRACKET,
+    TToken.LITERAL_CHAR,
+    TToken.LITERAL_INT,
+    TToken.LITERAL_STRING,
+    TToken.IDENTIFIER
+)
 
 class ParsingException(
     val found: Token,

@@ -4,12 +4,14 @@ import al.bootstrap.data.Tuple2
 import al.bootstrap.data.Tuple4
 import al.bootstrap.scanner.Token
 
-interface Visitor<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool> {
+interface Visitor<T_Program, T_Expressions, T_Expression, T_Invocation_Expression, T_Factor, T_LiteralBool> {
     fun visitProgram(a: T_Expressions): T_Program
 
     fun visitExpressions(a1: T_Expression, a2: List<Tuple2<Token, T_Expression>>): T_Expressions
 
-    fun visitExpression10(a: T_Factor): T_Expression
+    fun visitExpression10(a: T_Invocation_Expression): T_Expression
+
+    fun visitInvocationExpression (a1: T_Factor, a2: List<T_Factor>): T_Invocation_Expression
 
     fun visitFactor1(a: Token): T_Factor
     fun visitFactor2(a1: Token, a2: T_Expressions, a3: Token): T_Factor

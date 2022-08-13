@@ -22,7 +22,7 @@ class InternalException(
     val reason: String
 ) : Exception()
 
-class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, Expression> {
+class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, Expression, Expression> {
     override fun visitProgram(a: List<Expression>): Program =
         Program(a)
 
@@ -30,6 +30,12 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
         listOf(a1) + a2.map { it.b }
 
     override fun visitExpression10(a: Expression): Expression = a
+
+    override fun visitInvocationExpression(a1: Expression, a2: List<Expression>): Expression =
+        if (a2.isEmpty())
+            a1
+        else
+            Invocation(listOf(a1) + a2, a1.location + a2.last().location)
 
     override fun visitFactor1(a: Token): Expression = LiteralUnit(a.location)
 
