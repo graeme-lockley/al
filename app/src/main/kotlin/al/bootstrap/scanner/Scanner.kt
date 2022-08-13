@@ -8,7 +8,7 @@ enum class TToken {
 
     IDENTIFIER,
     LITERAL_CHAR,
-    LITERAL_INT,
+    LITERAL_I32,
     LITERAL_STRING,
 
     FALSE,
@@ -204,7 +204,7 @@ class Scanner(private val input: String) {
                         skipCharacter()
                     }
                     val lexeme = input.slice(startOffset until nextOffset)
-                    token = Token(lexeme, TToken.LITERAL_INT, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                    token = Token(lexeme, TToken.LITERAL_I32, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
                 '"' -> {
                     val sb = java.lang.StringBuilder()

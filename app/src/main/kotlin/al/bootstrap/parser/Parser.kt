@@ -114,7 +114,7 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Invocation_Expression, T_
 
                 return visitor.visitFactor6(a)
             }
-            isToken(TToken.LITERAL_INT) -> {
+            isToken(TToken.LITERAL_I32) -> {
                 val a = nextToken()
 
                 return visitor.visitFactor7(a)
@@ -180,7 +180,7 @@ val firstOfFactor = firstOfLiteralBool + setOf(
     TToken.LCURLY,
     TToken.LBRACKET,
     TToken.LITERAL_CHAR,
-    TToken.LITERAL_INT,
+    TToken.LITERAL_I32,
     TToken.LITERAL_STRING,
     TToken.IDENTIFIER
 )
