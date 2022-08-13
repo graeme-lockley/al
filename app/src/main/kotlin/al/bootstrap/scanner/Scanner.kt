@@ -15,10 +15,13 @@ enum class TToken {
     TRUE,
 
     COMMA,
+    EQUAL,
     LBRACKET,
+    LCURLY,
     LPAREN,
     LPAREN_RPAREN,
     RBRACKET,
+    RCURLY,
     RPAREN
 }
 
@@ -140,13 +143,25 @@ class Scanner(private val input: String) {
                         Token("", TToken.LPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                     }
                 }
+                '=' -> {
+                    skipCharacter()
+                    token = Token("", TToken.EQUAL, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
                 '[' -> {
                     skipCharacter()
                     token = Token("", TToken.LBRACKET, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
+                '{' -> {
+                    skipCharacter()
+                    token = Token("", TToken.LCURLY, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
                 ']' -> {
                     skipCharacter()
                     token = Token("", TToken.RBRACKET, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                '}' -> {
+                    skipCharacter()
+                    token = Token("", TToken.RCURLY, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
                 ',' -> {
                     skipCharacter()

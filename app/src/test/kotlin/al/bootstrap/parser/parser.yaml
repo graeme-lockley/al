@@ -21,6 +21,27 @@
           - LiteralList:
               - LiteralUnit
               - LiteralUnit
+      - name: Literal Record
+        input: |
+          {}
+          { name = "Graeme", age = 52 }
+          {name="Graeme",age=52}
+        output:
+          - LiteralRecord: []
+          - LiteralRecord:
+              - Key: name
+                Value:
+                  LiteralString: Graeme
+              - Key: age
+                Value:
+                  LiteralI32: 52
+          - LiteralRecord:
+              - Key: name
+                Value:
+                  LiteralString: Graeme
+              - Key: age
+                Value:
+                  LiteralI32: 52
       - name: Literal Bool
         input: |
           True

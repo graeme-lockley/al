@@ -3,10 +3,7 @@ package al.bootstrap.parser
 import al.bootstrap.Errors
 import al.bootstrap.InternalError
 import al.bootstrap.ParseError
-import al.bootstrap.data.Either
-import al.bootstrap.data.Left
-import al.bootstrap.data.Right
-import al.bootstrap.data.Tuple2
+import al.bootstrap.data.*
 import al.bootstrap.parser.ast.*
 import al.bootstrap.scanner.Scanner
 import al.bootstrap.scanner.Token
@@ -35,6 +32,7 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
     override fun visitExpression10(a: Expression): Expression = a
 
     override fun visitFactor1(a: Token): Expression = LiteralUnit(a.location)
+
     override fun visitFactor2(a1: Token, a2: List<Expression>, a3: Token): Expression =
         Parenthesis(a2, a1.location + a3.location)
 
@@ -43,6 +41,23 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
             LiteralList(emptyList(), a1.location + a3.location)
         else
             LiteralList(listOf(a2.a) + a2.b.map { it.b }, a1.location + a3.location)
+
+    override fun visitFactor4(
+        a1: Token,
+        a2: Tuple4<Token, Token, Expression, List<Tuple4<Token, Token, Token, Expression>>>?,
+        a3: Token
+    ): Expression =
+        if (a2 == null)
+            LiteralRecord(emptyList(), a1.location + a3.location)
+        else
+            LiteralRecord(
+                listOf(Tuple2(LiteralRecordKey(a2.a.lexeme, a2.a.location), a2.c)) + a2.d.map {
+                    Tuple2(
+                        LiteralRecordKey(it.b.lexeme, it.b.location),
+                        it.d
+                    )
+                }, a1.location + a3.location
+            )
 
     override fun visitFactor5(a: Expression): Expression =
         a

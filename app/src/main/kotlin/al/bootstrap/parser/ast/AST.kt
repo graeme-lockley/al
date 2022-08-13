@@ -1,5 +1,6 @@
 package al.bootstrap.parser.ast
 
+import al.bootstrap.data.Tuple2
 import al.bootstrap.data.Yamlable
 import al.bootstrap.scanner.Location
 
@@ -27,6 +28,26 @@ data class LiteralI32(val value: String, override val location: Location) : Expr
         singletonMap("LiteralI32", value)
 }
 
+data class LiteralList(val elements: List<Expression>, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralList", elements.map { it.yaml() })
+}
+
+data class LiteralRecord(val elements: List<Tuple2<LiteralRecordKey, Expression>>, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("LiteralRecord", elements.map {
+            mapOf(
+                Pair("Key", it.a.yaml()),
+                Pair("Value", it.b.yaml())
+            )
+        })
+}
+
+data class LiteralRecordKey(val key: String, val location: Location) : Yamlable {
+    override fun yaml(): Any =
+        key
+}
+
 data class LiteralString(val value: String, override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         singletonMap("LiteralString", value)
@@ -40,11 +61,6 @@ data class Identifier(val id: String, override val location: Location) : Express
 data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"
-}
-
-data class LiteralList(val elements: List<Expression>, override val location: Location) : Expression(location) {
-    override fun yaml(): Any =
-        singletonMap("LiteralList", elements.map { it.yaml() })
 }
 
 data class Parenthesis(val expressions: List<Expression>, override val location: Location) : Expression(location) {

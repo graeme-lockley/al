@@ -1,6 +1,7 @@
 package al.bootstrap.parser
 
 import al.bootstrap.data.Tuple2
+import al.bootstrap.data.Tuple4
 import al.bootstrap.scanner.Scanner
 import al.bootstrap.scanner.TToken
 import al.bootstrap.scanner.Token
@@ -66,6 +67,31 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
                 val a3 = matchToken(TToken.RBRACKET)
 
                 return visitor.visitFactor3(a1, a2, a3)
+            }
+            isToken(TToken.LCURLY) -> {
+                val a1 = nextToken()
+                val a2 = if (isToken(TToken.RCURLY)) {
+                    null
+                } else {
+                    val a21 = matchToken(TToken.IDENTIFIER)
+                    val a22 = matchToken(TToken.EQUAL)
+                    val a23 = expression()
+                    val a24 = mutableListOf<Tuple4<Token, Token, Token, T_Expression>>()
+
+                    while (isToken(TToken.COMMA)) {
+                        val a221 = nextToken()
+                        val a222 = matchToken(TToken.IDENTIFIER)
+                        val a223 = matchToken(TToken.EQUAL)
+                        val a224 = expression()
+
+                        a24.add(Tuple4(a221, a222, a223, a224))
+                    }
+
+                    Tuple4(a21, a22, a23, a24 as List<Tuple4<Token, Token, Token, T_Expression>>)
+                }
+                val a3 = matchToken(TToken.RCURLY)
+
+                return visitor.visitFactor4(a1, a2, a3)
             }
             isInTokenSet(firstOfLiteralBool) -> {
                 val a = literalBool()
