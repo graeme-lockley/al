@@ -17,6 +17,7 @@ interface Visitor<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBoo
     fun visitFactor6(a: Token): T_Factor
     fun visitFactor7(a: Token): T_Factor
     fun visitFactor8(a: Token): T_Factor
+    fun visitFactor9(a: Token): T_Factor
 
     fun visitLiteralBool1(a: Token): T_LiteralBool
     fun visitLiteralBool2(a: Token): T_LiteralBool

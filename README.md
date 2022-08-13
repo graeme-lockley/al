@@ -56,9 +56,11 @@ AdditiveExpression: MultiplicativeExpression {AdditiveOp MultiplicativeExpressio
 
 AdditiveOp: "+" | "-";
 
-MultiplicativeExpression: Factor {MultiplicativeOp Factor};
+MultiplicativeExpression: InvocationExpression {MultiplicativeOp InvocationExpression};
 
 RelationOp: "*" | "/";
+
+InvocationExpression: Factor {Expression};
 
 Factor
   : "()"
@@ -69,7 +71,7 @@ Factor
   | LiteralChar
   | LiteralI32
   | LiteralString
-  | Identifier [ "::" Type] {Expression}
+  | Identifier
   ;
   
 LiteralBool: "True" | "False";

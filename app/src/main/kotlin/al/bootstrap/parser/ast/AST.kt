@@ -32,6 +32,11 @@ data class LiteralString(val value: String, override val location: Location) : E
         singletonMap("LiteralString", value)
 }
 
+data class Identifier(val id: String, override val location: Location) : Expression(location) {
+    override fun yaml(): Any =
+        singletonMap("Identifier", id)
+}
+
 data class LiteralUnit(override val location: Location) : Expression(location) {
     override fun yaml(): Any =
         "LiteralUnit"

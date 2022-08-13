@@ -52,10 +52,17 @@
         input: |
           ""
           "Hello World"
-          "\"\n\\"
+          "\"\n\\\n"
         output:
           - LiteralString: ""
           - LiteralString: Hello World
           - LiteralString: |
               "
               \
+      - name: Identifier
+        input: |
+          hello
+          Cons
+        output:
+          - Identifier: hello
+          - Identifier: Cons
