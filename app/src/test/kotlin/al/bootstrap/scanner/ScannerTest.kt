@@ -78,6 +78,17 @@ class ScannerTest : FunSpec({
             Pair("", TToken.EOS),
         )
     }
+
+    test("given literal characters") {
+        val tokens = scanInput("'a' 'b' '\\n'")
+
+        tokens.map { Pair(it.lexeme, it.tToken) } shouldBe listOf(
+            Pair("'a'", TToken.LITERAL_CHAR),
+            Pair("'b'", TToken.LITERAL_CHAR),
+            Pair("'\\n'", TToken.LITERAL_CHAR),
+            Pair("", TToken.EOS),
+        )
+    }
 })
 
 private fun scanInput(input: String): List<Token> {

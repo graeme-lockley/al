@@ -7,6 +7,7 @@ enum class TToken {
     ERROR, EOS, OPEN_BLOCK, SEPARATOR, CLOSE_BLOCK,
 
     IDENTIFIER,
+    LITERAL_CHAR,
 
     FALSE,
     TRUE,
@@ -152,6 +153,33 @@ class Scanner(private val input: String) {
                 ')' -> {
                     skipCharacter()
                     token = Token("", TToken.RPAREN, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
+                '\'' -> {
+                    skipCharacter()
+                    val tToken =
+                        if (nextCh == '\\') {
+                            skipCharacter()
+                            if (nextCh == '\\' || nextCh == '\'' || nextCh == 'n') {
+                                skipCharacter()
+                                if (nextCh == '\'') {
+                                    skipCharacter()
+                                    TToken.LITERAL_CHAR
+                                } else {
+                                    TToken.ERROR
+                                }
+                            } else {
+                                TToken.ERROR
+                            }
+                        } else {
+                            skipCharacter()
+                            if (nextCh == '\'') {
+                                skipCharacter()
+                                TToken.LITERAL_CHAR
+                            } else TToken.ERROR
+                        }
+
+                    val lexeme = input.slice(startOffset until nextOffset)
+                    token = Token(lexeme, tToken, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
             }
         }

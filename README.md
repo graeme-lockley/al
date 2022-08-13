@@ -95,6 +95,7 @@ Using this grammar and the indentation rules, Al's lexical structure is defined 
 ```text
 tokens
   Identifier = id {digit | id} {"'"};
+  LiteralChar = chr(39) (!(chr(39) + chr(92)) | (chr(92) (chr(92) + chr(39) + 'n') chr(39); 
     
 fragments
   digit = '0'-'9';
