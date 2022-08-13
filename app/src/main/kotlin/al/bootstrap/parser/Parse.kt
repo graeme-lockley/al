@@ -10,8 +10,6 @@ import al.bootstrap.parser.ast.*
 import al.bootstrap.scanner.Scanner
 import al.bootstrap.scanner.Token
 
-//fun parse(scanner: Scanner): Program = Parser(scanner, ParseVisitor()).program()
-
 fun parse(scanner: Scanner): Either<Errors, Program> =
     try {
         Right(Parser(scanner, ParseVisitor()).program())
@@ -39,7 +37,7 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
         else
             LiteralList(listOf(a2.a) + a2.b.map { it.b }, a1.location + a3.location)
 
-    override fun visitFactor4(a: Expression): Expression =
+    override fun visitFactor5(a: Expression): Expression =
         a
 
     override fun visitLiteralBool1(a: Token): Expression =

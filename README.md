@@ -64,6 +64,7 @@ Factor
   : "()"
   | "(" Expressions ")"
   | "[" [Expression {"," Expression}] "]"
+  | "{" [Identifier "=" Expression] {"," Identifier "=" Expression} "}" 
   | LiteralBool
   | LiteralChar
   | LiteralI32

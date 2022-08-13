@@ -70,7 +70,7 @@ class Parser<T_Program, T_Expressions, T_Expression, T_Factor, T_LiteralBool>(
             isInTokenSet(firstOfLiteralBool) -> {
                 val a = literalBool()
 
-                return visitor.visitFactor4(a)
+                return visitor.visitFactor5(a)
             }
             else -> {
                 throw ParsingException(scanner.current, setOf(TToken.LPAREN, TToken.LPAREN_RPAREN))
