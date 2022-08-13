@@ -37,3 +37,12 @@
           - LiteralChar: 97
           - LiteralChar: 39
           - LiteralChar: 10
+      - name: Literal I32
+        input: |
+          0
+          100
+          12345
+        output:
+          - LiteralI32: 0
+          - LiteralI32: 100
+          - LiteralI32: 12345

@@ -62,6 +62,9 @@ class ParseVisitor : Visitor<Program, List<Expression>, Expression, Expression, 
             else -> throw InternalException(a, "Literal char lexeme should be of length 3 or 4 characters")
         }
 
+    override fun visitFactor7(a: Token): Expression =
+        LiteralI32(a.lexeme, a.location)
+
     override fun visitLiteralBool1(a: Token): Expression =
         LiteralBool(true, a.location)
 

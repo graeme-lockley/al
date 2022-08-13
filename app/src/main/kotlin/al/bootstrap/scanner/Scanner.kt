@@ -182,6 +182,14 @@ class Scanner(private val input: String) {
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, tToken, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
                 }
+                in '0'..'9' -> {
+                    skipCharacter()
+                    while (nextCh.isDigit()) {
+                        skipCharacter()
+                    }
+                    val lexeme = input.slice(startOffset until nextOffset)
+                    token = Token(lexeme, TToken.LITERAL_INT, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
+                }
                 else -> {
                     val lexeme = input.slice(startOffset until nextOffset)
                     token = Token(lexeme, TToken.ERROR, locationFrom(startOffset, startLine, startColumn, offset, line, column), emptyList())
